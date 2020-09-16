@@ -1,0 +1,7 @@
+base   framelet
+author Peeter Vois
+email  peeter@tauria.ee
+date   2020-09-16
+name   framelet plugin
+desc   Places remote javascript page that acts as custom editor or viewer for the data.
+url    https://github.com/peetervois/docuwiki_plugin_framelet
