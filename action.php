@@ -23,7 +23,7 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
      */
     public function register(Doku_Event_Handler $controller)
     {
-        $controller->register_hook('TPL_METAHEADER_OUTPUT', 'FIXME', $this, 'handle_tpl_metaheader_output');
+        $controller->register_hook('TPL_METAHEADER_OUTPUT', 'BEFORE', $this, 'handle_tpl_metaheader_output');
    
     }
 
@@ -40,6 +40,11 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
      */
     public function handle_tpl_metaheader_output(Doku_Event $event, $param)
     {
+        $event->data['script'][] = array(
+            'type'    => 'text/javascript',
+            'charset' => 'utf-8',
+            '_data'   => '',
+            'src' => DOKU_BASE."lib/plugins/framelet/script.js");
     }
 
 }

@@ -1,0 +1,12 @@
+====== Experimental Page ======
+
+Just some text before the framelet.
+
+<framelet width=100% height=300px scale=0.95 href=lib/plugins/framelet/test/index.html >
+{
+   "text":"This is written on the docuwiki page"
+}
+</framelet>
+
+And some text after the framelet.
+
