@@ -13,7 +13,7 @@ function framelet_pull( divid ){
 	var dataDiv = document.getElementById( divid + '_data' ); // get the data div
 	var myFrame = document.getElementById( divid + '_frame' ); // get the ifram div
 	var data = myFrame.contentWindow.database_pull();
-	dataDiv.innerText = JSON.stringify( data, null, 3 );
+	dataDiv.innerText = btoa( JSON.stringify( data, null, 3 ) );
 	// FIXME: we need to trigger the saving of the data into docuwiki
 }
 
@@ -31,16 +31,17 @@ function framelet_push( divid ){
 	// therefore wait a little with data initialisation.
 	var dataDiv = document.getElementById( divid + '_data' ); // get the data div
 	var myFrame = document.getElementById( divid + '_frame' ); // get the ifram div
-	window.setTimeout( function(){
-		var data_base = JSON.parse( dataDiv.innerText ); // parse the json object inside our section
+	myFrame.onload = function(){
+		var text = atob(dataDiv.innerText);
+		var data_base = JSON.parse( text ); // parse the json object inside our section
 		myFrame.contentWindow.database_push( data_base ); // assign new data base into inframe, that application must have the method
 		// the framelet can trigger data saving by calling database_submit( javscriptobject )
 		myFrame.contentWindow.database_submit = function(){
 			var data = myFrame.contentWindow.database_pull();
-			dataDiv.innerText = JSON.stringify( data, null, 3 );
+			dataDiv.innerText = btoa( JSON.stringify( data, null, 3 ) );
 			// FIXME: we need to trigger the saving of the data into docuwiki
 		}
-	},500);
+	};
 };
 
 /*

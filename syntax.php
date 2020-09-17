@@ -11,6 +11,8 @@ if (!defined('DOKU_INC')) {
     die();
 }
 
+require_once 'framemaker.php';
+
 class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
 {
     /**
@@ -106,7 +108,12 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
             $data["divid"] = "framelet";
         }
         
-        return $data;
+        $data += array(
+            'bytepos_start' => $pos,
+            'bytepos_end'   => $pos + strlen($match)
+        );
+        
+        return $data ;
     }
 
     /**
@@ -127,14 +134,20 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
             return false;
         }
         
-        $renderer->doc .= '<div id="'. $data["divid"].'_data" style="display:none" >'. $data["database"] .'</div>';
-        $renderer->doc .= '<input type="button" onclick="framelet_pull('."'".$data['divid']."'".')" value="SAVE">';
-        $renderer->doc .= '<input type="button" onclick="framelet_push('."'".$data['divid']."'".')" value="REVERT">';
-        $renderer->doc .= '<iframe ' .$this->iframe_params. 
-            ' id="'. $data["divid"].'_frame" frameborder=0 '.
-            ' src=" ' . DOKU_BASE . $this->iframe_href .'" ></iframe>';
-        $renderer->doc .= '<script type="text/javascript" defer="defer">framelet_push("'.$data['divid'].'")</script>';
+        $sectionEditData = [
+            'target' => 'plugin_framelet',
+            'name' => $data['divid'],
+            'iframeparams' => base64_encode( $this->iframe_params ),
+            'database' => base64_encode($data["database"]),
+            'iframehref' => base64_encode($this->iframe_href)
+        ];
+        $class = $renderer->startSectionEdit($data['bytepos_start'], $sectionEditData);
+        $renderer->doc .= '<div class="' . $class . '">';
         
+        $renderer->doc .= framemaker($sectionEditData);
+        
+        $renderer->doc .= '</div>';
+        $renderer->finishSectionEdit($data['bytepos_end']);
         return true;
     }
 }

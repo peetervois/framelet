@@ -11,6 +11,8 @@ if (!defined('DOKU_INC')) {
     die();
 }
 
+require_once 'framemaker.php';
+
 class action_plugin_framelet extends DokuWiki_Action_Plugin
 {
 
@@ -24,7 +26,8 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
     public function register(Doku_Event_Handler $controller)
     {
         $controller->register_hook('TPL_METAHEADER_OUTPUT', 'BEFORE', $this, 'handle_tpl_metaheader_output');
-   
+        $controller->register_hook('HTML_EDIT_FORMSELECTION', 'BEFORE', $this, '_editform');
+        $controller->register_hook('ACTION_ACT_PREPROCESS', 'BEFORE', $this, '_editpost');
     }
 
     /**
@@ -47,5 +50,44 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
             'src' => DOKU_BASE."lib/plugins/framelet/script.js");
     }
 
+    public function _editform(Doku_Event $event, $param) {
+        global $TEXT;
+        
+        if ($event->data['target'] !== 'plugin_framelet') {
+            return;
+        }
+        $event->preventDefault();
+        
+        // FIXME: Remove this if you want the default edit intro
+        //unset($event->data['intro_locale']);
+        
+        // FIXME: Remove this if you want a media manager fallback link
+        // You will probably want a media link if you want a normal toolbar
+        $event->data['media_manager'] = false;
+        
+        // FIXME: Create the lang files edit_intro.txt
+        //echo $this->locale_xhtml('edit_intro');
+        
+        $form =& $event->data['form'];
+        
+        // FIXME: Add real edit form
+        $form->addHidden( "wikitext", base64_encode($TEXT));
+        // FIXME: need to add the editor from framemaker, but framemaker needs some info:
+        //   we need the url to load, width height and scale.
+        //   The info is inside web form when do=edit will be posted, but
+        //   it appears this info is here not available.
+        //$form->addElement( framemaker($data) );
+    }
+    
+    public function _editpost(Doku_Event $event) {
+        // FIXME: Insert the name of a form field you use
+        if (!isset($_POST['JSONDATA'])) {
+            return;
+        }
+        global $TEXT;
+        
+        // FIXME: Create wikitext from post
+        $TEXT = magic_form_to_wiki_function();
+    }
 }
 
