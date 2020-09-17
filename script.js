@@ -48,6 +48,7 @@ function framelet_push( divid ){
 		catch(err){
 			// silently ignore
 			alert( "Error in the JSON data field !");
+			data_base = {};
 		}
 		if( typeof data_base != 'object' )
 			data_base = {};
@@ -69,6 +70,7 @@ function framelet_push( divid ){
 			}
 			catch( err ){
 				// we cathced this error here
+				alert( "Error in the JSON data field !");
 			}
 			// we need to trigger the saving of the data into docuwiki
 			if( finish !== "save" ){

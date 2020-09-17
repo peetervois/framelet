@@ -14,16 +14,32 @@ if (!defined('DOKU_INC')) {
 
 function framemaker( $data )
 {
+    global $REV;
+    global $ID;
+    
     $rv = "";
+    $rv .= '<form class="" method="post" action="'.DOKU_BASE.'doku.php">';
+    $rv .= '<div class="no">';
+    $rv .= '<input type="hidden" name="do" value="edit">';
+    $rv .= '<input type="hidden" name="rev" value="'.$REV.'">'; // FIXME
+    $rv .= '<input type="hidden" name="summary" value="[framelet] ">';
+    $rv .= '<input type="hidden" name="target" value="plugin_framelet">';
+    $rv .= '<input type="hidden" name="iframeparams" value="'.$data["iframeparams"].'">';
+    $rv .= '<input type="hidden" name="iframedivid" value="'.$data["iframedivid"].'">';
+    $rv .= '<input type="hidden" name="iframehref" value="'.$data["iframehref"].'">';
+    $rv .= '<input type="hidden" name="range" value="'.$data["bytepos_start"]."-".$data["bytepos_end"].'">';
+    $rv .= '<input type="hidden" name="hid" value="">';
+    $rv .= '<input type="hidden" name="id" value="'.$ID.'">';
+    $rv .= '<button type="submit" >Edit</button>';
+    $rv .= '</div>';
+    $rv .= '</form>';
+    //
     $rv .= '<input type="hidden" id="'. $data["iframedivid"].'_data" name="B64JSON" value="'. base64_encode($data["database"]) .'" >';
-    //$rv .= '<input type="button" onclick="framelet_pull('."'".$data['iframedivid']."'".')" value="SAVE">';
-    //$rv .= '<input type="button" onclick="framelet_push('."'".$data['iframedivid']."'".')" value="REVERT">';
-    $rv .= '<input type="hidden" name="do" value="edit" >';
     $rv .= '<iframe ' .base64_decode($data["iframeparams"]).
     ' id="'. $data["iframedivid"].'_frame" frameborder=0 '.
     ' src=" ' . DOKU_BASE . $data["iframehref"] .'" ></iframe>';
     $rv .= '<script type="text/javascript" defer="defer">framelet_push("'.$data['iframedivid'].'")</script>';
-    //$rv .= '<input id="framelet_edit" type="submit" value="Edit">';
+    
     
     return $rv;
 }
