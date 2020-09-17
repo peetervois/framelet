@@ -12,4 +12,11 @@ function database_push( jscriptobject ){
 	// place the data reception functions
 	var dataDiv = document.getElementById( 'textinput' ); // get the data div
 	dataDiv.value = jscriptobject.text;
+	if( jscriptobject.config.editable == false ){
+		var buttons = document.getElementsByTagName( 'input' );
+		for( var i=0; i< buttons.length; i++ ){
+			buttons[i].style.cssText = "display:none;";
+		}
+	}
+	
 }

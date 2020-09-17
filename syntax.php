@@ -138,8 +138,9 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
             'target' => 'plugin_framelet',
             'name' => $data['divid'],
             'iframeparams' => base64_encode( $this->iframe_params ),
-            'database' => base64_encode($data["database"]),
-            'iframehref' => base64_encode($this->iframe_href)
+            'iframedivid' => $data['divid'],
+            'database' => $data["database"],
+            'iframehref' => $this->iframe_href
         ];
         $class = $renderer->startSectionEdit($data['bytepos_start'], $sectionEditData);
         $renderer->doc .= '<div class="' . $class . '">';

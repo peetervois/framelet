@@ -59,7 +59,7 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
         $event->preventDefault();
         
         // FIXME: Remove this if you want the default edit intro
-        //unset($event->data['intro_locale']);
+        unset($event->data['intro_locale']);
         
         // FIXME: Remove this if you want a media manager fallback link
         // You will probably want a media link if you want a normal toolbar
@@ -71,23 +71,30 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
         $form =& $event->data['form'];
         
         // FIXME: Add real edit form
-        $form->addHidden( "wikitext", base64_encode($TEXT));
+        $form->addHidden( "do", "cancel");
         // FIXME: need to add the editor from framemaker, but framemaker needs some info:
         //   we need the url to load, width height and scale.
         //   The info is inside web form when do=edit will be posted, but
         //   it appears this info is here not available.
-        //$form->addElement( framemaker($data) );
+        $data = Array(
+            'iframedivid' => $_POST['iframedivid'],
+            'iframeparams' => $_POST['iframeparams'],
+            'iframehref' => $_POST['iframehref'],
+            'database' => $TEXT
+        );
+        $form->addElement( frameedit($data) );
     }
     
     public function _editpost(Doku_Event $event) {
         // FIXME: Insert the name of a form field you use
-        if (!isset($_POST['JSONDATA'])) {
+        if( !isset($_POST['B64JSON']) ) {
             return;
         }
+        
         global $TEXT;
         
-        // FIXME: Create wikitext from post
-        $TEXT = magic_form_to_wiki_function();
+        // Create wikitext from post
+        $TEXT = base64_decode($_POST['B64JSON']);
     }
 }
 
