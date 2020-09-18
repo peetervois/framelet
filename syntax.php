@@ -13,6 +13,26 @@ if (!defined('DOKU_INC')) {
 
 require_once 'framemaker.php';
 
+/**
+ * Simple helper to debug to the console
+ *
+ * @param $data object, array, string $data
+ * @param $context string  Optional a description.
+ *
+ * @return string
+ */
+function debug_to_console($data, $context = 'Debug in Console') {
+    
+    // Buffering to solve problems frameworks, like header() in this and not a solid return.
+    ob_start();
+    
+    $output  = 'console.info(\'' . $context . ':\');';
+    $output .= 'console.log(' . json_encode($data) . ');';
+    $output  = sprintf('<script>%s</script>', $output);
+    
+    echo $output;
+}
+
 class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
 {
     /**
@@ -54,8 +74,8 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
         $this->Lexer->addExitPattern('</framelet>', 'plugin_framelet');
     }
 
-    protected $iframe_params = "";
-    protected $iframe_href = "lib/plugins/framelet/test/index.html";
+    protected $iframe_params = ' style="min-width:90%; min-height:300px; background-color:lightcoral;" ';
+    protected $iframe_href = "lib/plugins/framelet/information.html";
     
     /**
      * Handle matches of the framelet syntax
@@ -112,6 +132,8 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
             'bytepos_start' => $pos,
             'bytepos_end'   => $pos + strlen($match)
         );
+
+        debug_to_console( [ 'state'=>$state, 'pos'=>$pos, 'match'=>$match ] );
         
         return $data ;
     }
@@ -127,6 +149,8 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
      */
     public function render($mode, Doku_Renderer $renderer, $data)
     {
+        global $INFO;
+        
         if ($mode !== 'xhtml') {
             return false;
         }
@@ -142,8 +166,12 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
             'database' => $data["database"],
             'iframehref' => $this->iframe_href,
             'bytepos_start' => $data['bytepos_start'],
-            'bytepos_end' => $data['bytepos_end']
+            'bytepos_end' => $data['bytepos_end'],
+            'rev' => $INFO['lastmod']
         ];
+        
+        debug_to_console( [ 'date_at'=>$INFO['lastmod'] ] );
+        
         $class = $renderer->startSectionEdit($data['bytepos_start'], $sectionEditData);
         $renderer->doc .= '<div class="' . $class . '">';
         

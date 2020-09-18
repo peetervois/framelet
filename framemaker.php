@@ -21,16 +21,16 @@ function framemaker( $data )
     $rv .= '<form class="" method="post" action="'.DOKU_BASE.'doku.php">';
     $rv .= '<div class="no">';
     $rv .= '<input type="hidden" name="do" value="edit">';
-    $rv .= '<input type="hidden" name="rev" value="'.$REV.'">'; // FIXME
+    $rv .= '<input type="hidden" name="rev" value="'.$data['rev'].'">'; // FIXME
     $rv .= '<input type="hidden" name="summary" value="[framelet] ">';
     $rv .= '<input type="hidden" name="target" value="plugin_framelet">';
     $rv .= '<input type="hidden" name="iframeparams" value="'.$data["iframeparams"].'">';
     $rv .= '<input type="hidden" name="iframedivid" value="'.$data["iframedivid"].'">';
     $rv .= '<input type="hidden" name="iframehref" value="'.$data["iframehref"].'">';
     $rv .= '<input type="hidden" name="range" value="'.$data["bytepos_start"]."-".$data["bytepos_end"].'">';
-    $rv .= '<input type="hidden" name="hid" value="">';
+    //$rv .= '<input type="hidden" name="hid" value="">';
     $rv .= '<input type="hidden" name="id" value="'.$ID.'">';
-    $rv .= '<button type="submit" >Edit</button>';
+    $rv .= '<button type="submit" >Edit</button><br>';
     $rv .= '</div>';
     $rv .= '</form>';
     //
