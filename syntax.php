@@ -20,7 +20,7 @@ require_once 'framemaker.php';
  * @param $context string  Optional a description.
  *
  * @return string
- */
+ *
 function debug_to_console($data, $context = 'Debug in Console') {
     
     // Buffering to solve problems frameworks, like header() in this and not a solid return.
@@ -32,6 +32,7 @@ function debug_to_console($data, $context = 'Debug in Console') {
     
     echo $output;
 }
+*/
 
 class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
 {
@@ -126,6 +127,8 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
             $data["database"] = $match;
             $data["render"] = true;
             $data["divid"] = "framelet";
+            $data["iframe_params"] = $this->iframe_params;
+            $data["iframe_href"] = $this->iframe_href;
         }
         
         $data += array(
@@ -133,7 +136,6 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
             'bytepos_end'   => $pos + strlen($match)
         );
 
-        debug_to_console( [ 'state'=>$state, 'pos'=>$pos, 'match'=>$match ] );
         
         return $data ;
     }
@@ -161,16 +163,15 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
         $sectionEditData = [
             'target' => 'plugin_framelet',
             //'name' => $data['divid'],
-            'iframeparams' => base64_encode( $this->iframe_params ),
+            'iframeparams' => base64_encode( $data['iframe_params'] ),
             'iframedivid' => $data['divid'],
             'database' => $data["database"],
-            'iframehref' => $this->iframe_href,
+            'iframehref' => $data['iframe_href'],
             'bytepos_start' => $data['bytepos_start'],
             'bytepos_end' => $data['bytepos_end'],
             'rev' => $INFO['lastmod']
         ];
         
-        debug_to_console( [ 'date_at'=>$INFO['lastmod'] ] );
         
         $class = $renderer->startSectionEdit($data['bytepos_start'], $sectionEditData);
         $renderer->doc .= '<div class="' . $class . '">';

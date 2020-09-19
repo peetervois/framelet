@@ -1,6 +1,6 @@
 
 
-/* DOKUWIKI:include base64.js */
+/* DOKUWIKI:include vendor/base64.js */
 
 /*
  *  Pull the data from iframe application.

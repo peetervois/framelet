@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>TestFramelet</title>
+<meta charset="utf8" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<base target="_blank">
+<script charset="utf-8">
+function database_pull(){
+	var rv = {};
+	return rv;
+}
+
+function database_push( jscriptobject ){
+	// place the data reception functions
+	if( jscriptobject.config.editable == false ){
+		var buttons = document.getElementsByTagName( 'input' );
+		for( var i=0; i< buttons.length; i++ ){
+			buttons[i].style.cssText = "display:none;";
+		}
+	}
+	
+}
+
+</script>
+</head>
+<body>
+
+<input type="button" onclick="database_submit('cancel')" value="Cancel">
+<br>
+
+<h1>ERROR: The page to load is not specified !</h1>
+
+<p>
+Use it like this:<br> 
+	< framelet width=1000px height=800px scale=0.8 href=lib/plugins/framelet/information.html ><br>
+	< /framelet><br>
+</p>
+
+</body>
+</html>
