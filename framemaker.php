@@ -21,7 +21,7 @@ function framemaker( $data )
     $rv .= '<form class="" method="post" action="'.DOKU_BASE.'doku.php">';
     $rv .= '<div class="no">';
     $rv .= '<input type="hidden" name="do" value="edit">';
-    $rv .= '<input type="hidden" name="rev" value="'.$data['rev'].'">'; // FIXME
+    $rv .= '<input type="hidden" name="rev" value="'.$data['rev'].'">'; 
     $rv .= '<input type="hidden" name="summary" value="[framelet] ">';
     $rv .= '<input type="hidden" name="target" value="plugin_framelet">';
     $rv .= '<input type="hidden" name="iframeparams" value="'.$data["iframeparams"].'">';
@@ -34,7 +34,7 @@ function framemaker( $data )
     $rv .= '</div>';
     $rv .= '</form>';
     //
-    $rv .= '<input type="hidden" id="'. $data["iframedivid"].'_data" name="B64JSON" value="'. base64_encode($data["database"]) .'" >';
+    $rv .= '<input type="hidden" id="'. $data["iframedivid"].'_data" name="B64JSON" value="'. $data["database"] .'" >';
     $rv .= '<iframe ' .base64_decode($data["iframeparams"]).
     ' id="'. $data["iframedivid"].'_frame" frameborder=0 '.
     ' src=" ' . DOKU_BASE . $data["iframehref"] .'" ></iframe>';
@@ -59,7 +59,7 @@ function frameedit( $data )
     $style .= "background-color: rgba(209, 215, 211, 0.9); "; /* Black w/ opacity */
     $style .= '" ';
     $rv = "";
-    $rv .= '<input type="hidden" id="'. $data["iframedivid"].'_data" name="B64JSON" value="'. base64_encode($data["database"]) .'" >';
+    $rv .= '<input type="hidden" id="'. $data["iframedivid"].'_data" name="B64JSON" value="'. $data["database"] .'" >';
     //$rv .= '<input type="button" onclick="framelet_pull('."'".$data['iframedivid']."'".')" value="SAVE">';
     //$rv .= '<input type="button" onclick="framelet_push('."'".$data['iframedivid']."'".')" value="REVERT">';
     $rv .= '<iframe ' .$style.

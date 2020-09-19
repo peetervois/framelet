@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/dankogai/js-base64.git
+	branch = master
+	commit = deaecb270b0bf0874fac310f129aabc7b622b578
+	parent = b2eb89f4996188b4074f4a5217d7419b186dd7db
+	method = merge
+	cmdver = 0.4.0

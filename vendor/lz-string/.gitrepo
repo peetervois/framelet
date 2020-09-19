@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/pieroxy/lz-string.git
+	branch = master
+	commit = b2e0b270a9f3cf330b778b777385fcba384a1a02
+	parent = c1f83aafbd254ea14ccf16c6f785b39db39d600f
+	method = merge
+	cmdver = 0.4.0

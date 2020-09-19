@@ -13,6 +13,13 @@ if (!defined('DOKU_INC')) {
 
 require_once 'framemaker.php';
 
+require_once 'vendor/lz-string-php/src/LZCompressor/LZContext.php';
+require_once 'vendor/lz-string-php/src/LZCompressor/LZData.php';
+require_once 'vendor/lz-string-php/src/LZCompressor/LZReverseDictionary.php';
+require_once 'vendor/lz-string-php/src/LZCompressor/LZString.php';
+require_once 'vendor/lz-string-php/src/LZCompressor/LZUtil.php';
+require_once 'vendor/lz-string-php/src/LZCompressor/LZUtil16.php';
+
 class action_plugin_framelet extends DokuWiki_Action_Plugin
 {
 
@@ -48,6 +55,16 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
             'charset' => 'utf-8',
             '_data'   => '',
             'src' => DOKU_BASE."lib/plugins/framelet/script.js");
+        $event->data['script'][] = array(
+            'type'    => 'text/javascript',
+            'charset' => 'utf-8',
+            '_data'   => '',
+            'src' => DOKU_BASE."lib/plugins/framelet/vendor/lz-string/libs/lz-string.min.js");
+     //   $event->data['script'][] = array(
+     //       'type'    => 'text/javascript',
+     //       'charset' => 'utf-8',
+     //       '_data'   => '',
+     //       'src' => DOKU_BASE."lib/plugins/framelet/vendor/js-base64/base64.js");
     }
 
     public function _editform(Doku_Event $event, $param) {
@@ -58,10 +75,10 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
         }
         $event->preventDefault();
         
-        // FIXME: Remove this if you want the default edit intro
+        // No default edit intro
         unset($event->data['intro_locale']);
         
-        // FIXME: Remove this if you want a media manager fallback link
+        // No media manager fallback link
         // You will probably want a media link if you want a normal toolbar
         $event->data['media_manager'] = false;
         
@@ -70,23 +87,20 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
         
         $form =& $event->data['form'];
         
-        // FIXME: Add real edit form
+        // Make fake edit form that can be driven from the framelet application
         $form->addHidden( "do", "cancel");
-        // FIXME: need to add the editor from framemaker, but framemaker needs some info:
-        //   we need the url to load, width height and scale.
-        //   The info is inside web form when do=edit will be posted, but
-        //   it appears this info is here not available.
+        // Prepare the data for framemaker
         $data = Array(
             'iframedivid' => $_POST['iframedivid'],
             'iframeparams' => $_POST['iframeparams'],
             'iframehref' => $_POST['iframehref'],
-            'database' => $TEXT
+            'database' => \LZCompressor\LZString::compressToEncodedURIComponent($TEXT)
         );
         $form->addElement( frameedit($data) );
     }
     
     public function _editpost(Doku_Event $event) {
-        // FIXME: Insert the name of a form field you use
+        // When we find inside POST the field 'B64JSON' we will decompress it
         if( !isset($_POST['B64JSON']) ) {
             return;
         }
@@ -94,7 +108,7 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
         global $TEXT;
         
         // Create wikitext from post
-        $TEXT = base64_decode($_POST['B64JSON']);
+        $TEXT = \LZCompressor\LZString::decompressFromEncodedURIComponent( $_POST['B64JSON'] );
     }
 }
 

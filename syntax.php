@@ -13,6 +13,13 @@ if (!defined('DOKU_INC')) {
 
 require_once 'framemaker.php';
 
+require_once 'vendor/lz-string-php/src/LZCompressor/LZContext.php';
+require_once 'vendor/lz-string-php/src/LZCompressor/LZData.php';
+require_once 'vendor/lz-string-php/src/LZCompressor/LZReverseDictionary.php';
+require_once 'vendor/lz-string-php/src/LZCompressor/LZString.php';
+require_once 'vendor/lz-string-php/src/LZCompressor/LZUtil.php';
+require_once 'vendor/lz-string-php/src/LZCompressor/LZUtil16.php';
+
 /**
  * Simple helper to debug to the console
  *
@@ -124,10 +131,10 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
         
         
         if( $state == DOKU_LEXER_UNMATCHED ){
-            $data["database"] = $match;
+            $data["database"] = \LZCompressor\LZString::compressToEncodedURIComponent($match);
             $data["render"] = true;
             $data["divid"] = "framelet";
-            $data["iframe_params"] = $this->iframe_params;
+            $data["iframe_params"] = base64_encode( $this->iframe_params );
             $data["iframe_href"] = $this->iframe_href;
         }
         
@@ -163,7 +170,7 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
         $sectionEditData = [
             'target' => 'plugin_framelet',
             //'name' => $data['divid'],
-            'iframeparams' => base64_encode( $data['iframe_params'] ),
+            'iframeparams' => $data['iframe_params'],
             'iframedivid' => $data['divid'],
             'database' => $data["database"],
             'iframehref' => $data['iframe_href'],

@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/nullpunkt/lz-string-php.git
+	branch = master
+	commit = 9531b65a350fcfb6169e0d7c9b225f22b7fd9973
+	parent = 04dab50bdec320906fab48717bc4fd71f4701766
+	method = merge
+	cmdver = 0.4.0
