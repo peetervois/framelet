@@ -82,9 +82,11 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
         $this->Lexer->addExitPattern('</framelet>', 'plugin_framelet');
     }
 
+    protected $iframe_params_default = ' style="min-width:90%; min-height:300px; background-color:lightcoral;" ';
+    protected $iframe_href_default = "lib/plugins/framelet/information.html";
     protected $iframe_params = ' style="min-width:90%; min-height:300px; background-color:lightcoral;" ';
     protected $iframe_href = "lib/plugins/framelet/information.html";
-    
+    protected $iframe_counter = 0;
     /**
      * Handle matches of the framelet syntax
      *
@@ -103,6 +105,7 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
         $data["render"] = false;
         
         if( $state == DOKU_LEXER_ENTER){
+            $this->iframe_counter ++;
             $keywords = preg_split("/[\s>]+/", $match);
             $res = ' style=" ';
             foreach( $keywords as $kw ){
@@ -133,9 +136,14 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
         if( $state == DOKU_LEXER_UNMATCHED ){
             $data["database"] = \LZCompressor\LZString::compressToEncodedURIComponent($match);
             $data["render"] = true;
-            $data["divid"] = "framelet";
+            $data["divid"] = "framelet".$this->iframe_counter;
             $data["iframe_params"] = base64_encode( $this->iframe_params );
             $data["iframe_href"] = $this->iframe_href;
+        }
+        
+        if( $state == DOKU_LEXER_EXIT ){
+            $this->iframe_params_default;
+            $this->iframe_href_default;
         }
         
         $data += array(
