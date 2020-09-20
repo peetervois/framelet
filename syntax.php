@@ -199,3 +199,4 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
     }
 }
 
+?>
