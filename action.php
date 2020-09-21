@@ -60,11 +60,11 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
             'charset' => 'utf-8',
             '_data'   => '',
             'src' => DOKU_BASE."lib/plugins/framelet/vendor/lz-string/libs/lz-string.min.js");
-        $event->data['script'][] = array(
-            'type'    => 'text/javascript',
-            'charset' => 'utf-8',
-            '_data'   => '',
-            'src' => DOKU_BASE."lib/plugins/framelet/vendor/no_back_please.js");
+     //   $event->data['script'][] = array(
+     //       'type'    => 'text/javascript',
+     //       'charset' => 'utf-8',
+     //       '_data'   => '',
+     //       'src' => DOKU_BASE."lib/plugins/framelet/vendor/no_back_please.js");
      //   $event->data['script'][] = array(
      //       'type'    => 'text/javascript',
      //       'charset' => 'utf-8',

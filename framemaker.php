@@ -66,6 +66,8 @@ function frameedit( $data )
     ' id="'. $data["iframedivid"].'_frame" frameborder=0 '.
     ' src=" ' . DOKU_BASE . $data["iframehref"] .'" ></iframe>';
     $rv .= '<script type="text/javascript" defer="defer">framelet_push("'.$data['iframedivid'].'")</script>';
+    $rv .= '<script type="text/javascript" defer="defer" src="lib/plugins/framelet/vendor/no_back_please.js"></script>';
+    
     
     return $rv;
 }
