@@ -13,12 +13,14 @@ if (!defined('DOKU_INC')) {
 
 require_once 'framemaker.php';
 
+/*
 require_once 'vendor/lz-string-php/src/LZCompressor/LZContext.php';
 require_once 'vendor/lz-string-php/src/LZCompressor/LZData.php';
 require_once 'vendor/lz-string-php/src/LZCompressor/LZReverseDictionary.php';
 require_once 'vendor/lz-string-php/src/LZCompressor/LZString.php';
 require_once 'vendor/lz-string-php/src/LZCompressor/LZUtil.php';
 require_once 'vendor/lz-string-php/src/LZCompressor/LZUtil16.php';
+*/
 
 /**
  * Simple helper to debug to the console
@@ -134,7 +136,7 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
         
         
         if( $state == DOKU_LEXER_UNMATCHED ){
-            $data["database"] = \LZCompressor\LZString::compressToEncodedURIComponent($match);
+            $data["database"] = base64_encode($match);
             $data["render"] = true;
             $data["divid"] = "framelet".$this->iframe_counter;
             $data["iframe_params"] = base64_encode( $this->iframe_params );
