@@ -13,14 +13,12 @@ if (!defined('DOKU_INC')) {
 
 require_once 'framemaker.php';
 
-/*
 require_once 'vendor/lz-string-php/src/LZCompressor/LZContext.php';
 require_once 'vendor/lz-string-php/src/LZCompressor/LZData.php';
 require_once 'vendor/lz-string-php/src/LZCompressor/LZReverseDictionary.php';
 require_once 'vendor/lz-string-php/src/LZCompressor/LZString.php';
 require_once 'vendor/lz-string-php/src/LZCompressor/LZUtil.php';
 require_once 'vendor/lz-string-php/src/LZCompressor/LZUtil16.php';
-*/
 
 class action_plugin_framelet extends DokuWiki_Action_Plugin
 {
@@ -67,11 +65,11 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
      //       'charset' => 'utf-8',
      //       '_data'   => '',
      //       'src' => DOKU_BASE."lib/plugins/framelet/vendor/no_back_please.js");
-        $event->data['script'][] = array(
-            'type'    => 'text/javascript',
-            'charset' => 'utf-8',
-            '_data'   => '',
-            'src' => DOKU_BASE."lib/plugins/framelet/vendor/js-base64/base64.js");
+     //   $event->data['script'][] = array(
+     //       'type'    => 'text/javascript',
+     //       'charset' => 'utf-8',
+     //       '_data'   => '',
+     //       'src' => DOKU_BASE."lib/plugins/framelet/vendor/js-base64/base64.js");
     }
 
     public function _editform(Doku_Event $event, $param) {
@@ -104,7 +102,7 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
             'iframedivid' => $_POST['iframedivid'],
             'iframeparams' => $_POST['iframeparams'],
             'iframehref' => $_POST['iframehref'],
-            'database' => base64_encode($TEXT)
+            'database' => \LZCompressor\LZString::compressToEncodedURIComponent($TEXT)
         );
         $form->addElement( frameedit($data) );
     }
@@ -118,7 +116,7 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
         global $TEXT;
         
         // Create wikitext from post
-        $TEXT = base64_decode( $_POST['B64JSON'] );
+        $TEXT = \LZCompressor\LZString::decompressFromEncodedURIComponent( $_POST['B64JSON'] );
     }
 }
 

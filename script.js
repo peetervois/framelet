@@ -43,7 +43,7 @@ function framelet_pull( divid ){
 	var dataDiv = document.getElementById( divid + '_data' ); // get the data div
 	var myFrame = document.getElementById( divid + '_frame' ); // get the ifram div
 	var data = myFrame.contentWindow.database_pull();
-	dataDiv.value = Base64.encode( JSON.stringify( data, null, 3 ) );
+	dataDiv.value = LZString.compressToEncodedURIComponent( JSON.stringify( data, null, 3 ) );
 }
 
 /*
@@ -72,7 +72,7 @@ function framelet_push( divid ){
 		iframe_is_ready[divid] = true;
 		//var compr = Base64.decode( dataDiv.value );
 		// text = LZString.decompress( compr );
-		text = Base64.decode( dataDiv.value );
+		text = LZString.decompressFromEncodedURIComponent( dataDiv.value );
 		// parse the json object inside our section
 		var data_base = {};
 		try {
@@ -103,7 +103,7 @@ function framelet_push( divid ){
 			myFrame.contentWindow.database_submit = function( finish ){
 				var data = myFrame.contentWindow.database_pull();
 				try {
-					dataDiv.value = Base64.encode( JSON.stringify( data, null, 3 ) );
+					dataDiv.value = LZString.compressToEncodedURIComponent( JSON.stringify( data, null, 3 ) );
 				}
 				catch( err ){
 					// we cathced this error here
