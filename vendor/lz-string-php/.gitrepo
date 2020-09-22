@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:peetervois/lz-string-php.git
 	branch = master
-	commit = 9531b65a350fcfb6169e0d7c9b225f22b7fd9973
-	parent = c1f83aafbd254ea14ccf16c6f785b39db39d600f
+	commit = 71d4bf81c73bea6e1eebc848f23cae9a6ac470ac
+	parent = a0c1a519c3a2db6d8aeb38fd83c646cd0664a643
 	method = merge
 	cmdver = 0.4.0
