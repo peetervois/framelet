@@ -102,7 +102,9 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
             'iframedivid' => $_POST['iframedivid'],
             'iframeparams' => $_POST['iframeparams'],
             'iframehref' => $_POST['iframehref'],
-            'database' => \LZCompressor\LZString::compressToEncodedURIComponent($TEXT)
+            'database' => \LZCompressor\LZString::compressToEncodedURIComponent($TEXT),
+            'framewidth' => $_POST['framewidth'],
+            'frameheight' => $_POST['frameheight']
         );
         $form->addElement( frameedit($data) );
     }

@@ -57,6 +57,7 @@ function database_push( jscriptobject ){
  */
 
 var iframe_is_ready = {};
+var iframe_rescaler = {};
 function framelet_push( divid ){
 	// It appears that this function is called when the iframe is not ready, 
 	// therefore wait a little with data initialisation.
@@ -128,15 +129,46 @@ function framelet_push( divid ){
 		// from dokuwiki page you can call this method to force the data to be submitted again
 		myFrame.onload();
 	}
-	else if( myForm !== null )
-	{
-		// attach the onsubmit event handler to the form, in case somebody clicks on submission buttons
-		// on the dokuwiki
-		myForm.onsubmit = function(){
-			framelet_pull( divid );
-			return true;
-		};
-	}	
+	else{
+		// some tasks to perform on very first run
+		// attach some handlers to form actions
+		if( myForm !== null ){
+			// attach the onsubmit event handler to the form, in case somebody clicks on submission buttons
+			// on the dokuwiki
+			myForm.onsubmit = function(){
+				framelet_pull( divid );
+				return true;
+			};
+		}
+		// attach the autoscale handler to window.
+		var myRefDiv = document.getElementById( divid + '_ifdiv' );
+		if( myRefDiv != null ){
+			var onresizehandler = function(){
+				if( typeof iframe_rescaler[divid] !== 'undefined' ){
+					clearTimeout( iframe_rescaler[divid] );
+					delete iframe_rescaler[divid];
+				}
+				iframe_rescaler[divid] = setTimeout( function(){
+					var divw = myRefDiv.offsetWidth;
+					var divh = myRefDiv.offsetHeight;
+					var reqw = myRefDiv.attributes.iframerequestwidth.nodeValue;
+					delete iframe_rescaler[divid];
+					if( reqw <= 0 ) return;
+					var scale = divw / reqw;
+					if( scale > 1 )
+					{
+						scale = 1;
+						myFrame.style.width = ''+divw+'px';
+					}	
+					// look
+					myFrame.style.height = ''+ divh/scale +'px';
+					myFrame.style.webkitTransform = 'scale('+scale+')';
+				}, 300);
+			};
+			window.onresize = onresizehandler;
+			onresizehandler();
+		}
+	} 	
 };
 
 /*

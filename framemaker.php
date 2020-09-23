@@ -30,21 +30,28 @@ function framemaker( $data )
     $rv .= '<input type="hidden" name="range" value="'.$data["bytepos_start"]."-".$data["bytepos_end"].'">';
     //$rv .= '<input type="hidden" name="hid" value="">';
     $rv .= '<input type="hidden" name="id" value="'.$ID.'">';
+    $rv .= '<input type="hidden" name="framewidth" value="'.$data["framewidth"].'">';
+    $rv .= '<input type="hidden" name="frameheight" value="'.$data["frameheight"].'">';
     $rv .= '<button type="submit" >Edit</button><br>';
     $rv .= '</div>';
     $rv .= '</form>';
     //
     $rv .= '<input type="hidden" id="'. $data["iframedivid"].'_data" name="B64JSON" value="'. $data["database"] .'" >';
+    $rv .= '<div id="'. $data["iframedivid"].'_ifdiv"'.
+        ' iframerequestwidth="'. $data["framewidth"].'"'.
+        ' iframerequestheight="'. $data["frameheight"].'"'.
+        ' style="width:100%; height:'.$data["frameheight"].'px; margin:0px; padding:0px; border-width:0px" >'; // this div is used for autoscaling
     $rv .= '<iframe ' .base64_decode($data["iframeparams"]).
     ' id="'. $data["iframedivid"].'_frame" frameborder=0 '.
     ' src=" ' . DOKU_BASE . $data["iframehref"] .'" ></iframe>';
+    $rv .= '</div>';
     $rv .= '<script type="text/javascript" defer="defer">framelet_push("'.$data['iframedivid'].'")</script>';
     
     
     return $rv;
 }
 
-function frameedit( $data )
+function frameoverlaystyle( $width )
 {
     $style = ' style="';
     $style .= "position: fixed; "; /* Stay in place */
@@ -52,19 +59,35 @@ function frameedit( $data )
     $style .= "padding-top: 0px; "; /* Location of the box */
     $style .= "left: 0px; ";
     $style .= "top: 0px; ";
-    $style .= "width: 100%; "; /* Full width */
+    $style .= "min-width: ".$width."; "; /* Full width */
     $style .= "height: 100%; "; /* Full height */
     $style .= "overflow: auto; "; /* Enable scroll if needed */
     $style .= "background-color: rgb(200,200,200); "; /* Fallback color */
     $style .= "background-color: rgba(209, 215, 211, 0.9); "; /* Black w/ opacity */
+    $style .= "-webkit-transform-origin: 0 0;";
     $style .= '" ';
+    return $style;
+}
+
+function frameedit( $data )
+{
+    $style = frameoverlaystyle($data["framewidth"]."px");
+    if( $data["framewidth"] <= 0 ){
+        $style = frameoverlaystyle("100%");
+    }
     $rv = "";
     $rv .= '<input type="hidden" id="'. $data["iframedivid"].'_data" name="B64JSON" value="'. $data["database"] .'" >';
     //$rv .= '<input type="button" onclick="framelet_pull('."'".$data['iframedivid']."'".')" value="SAVE">';
     //$rv .= '<input type="button" onclick="framelet_push('."'".$data['iframedivid']."'".')" value="REVERT">';
-    $rv .= '<iframe ' .$style.
-    ' id="'. $data["iframedivid"].'_frame" frameborder=0 '.
-    ' src=" ' . DOKU_BASE . $data["iframehref"] .'" ></iframe>';
+    $rv .= '<div id="'. $data["iframedivid"].'_ifdiv"'.
+        ' iframerequestwidth="'. $data["framewidth"].'"'. 
+        ' iframerequestheight="'. $data["frameheight"].'"'.
+        frameoverlaystyle("100%").
+        ' >'; // this div is used for autoscaling
+        $rv .= '<iframe ' .$style.
+        ' id="'. $data["iframedivid"].'_frame" frameborder=0 '.
+        ' src=" ' . DOKU_BASE . $data["iframehref"] .'" ></iframe>';
+    $rv .= '</div>';
     $rv .= '<script type="text/javascript" defer="defer">framelet_push("'.$data['iframedivid'].'")</script>';
     $rv .= '<script type="text/javascript" defer="defer" src="lib/plugins/framelet/vendor/no_back_please.js"></script>';
     

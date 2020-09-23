@@ -87,6 +87,11 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
     protected $iframe_params = ' style="min-width:90%; min-height:300px; background-color:lightcoral;" ';
     protected $iframe_href = "lib/plugins/framelet/information.html";
     protected $iframe_counter = 0;
+    protected $iframe_width_default = 0;
+    protected $iframe_height_default = 300;
+    protected $iframe_width = 0;
+    protected $iframe_height = 300;
+    
     /**
      * Handle matches of the framelet syntax
      *
@@ -105,6 +110,11 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
         $data["render"] = false;
         
         if( $state == DOKU_LEXER_ENTER){
+            $this->iframe_params = $this->iframe_params_default;
+            $this->iframe_href = $this->iframe_href_default;
+            $this->iframe_width = $this->iframe_width_default;
+            $this->iframe_height = $this->iframe_height_default;
+            
             $this->iframe_counter ++;
             $keywords = preg_split("/[\s>]+/", $match);
             $res = ' style=" ';
@@ -112,16 +122,23 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
                 $nv = explode("=",$kw);
                 if( $nv[0] == 'width' ){
                     $res .= "min-width:" .$nv[1]. "; ";
+                    $unit = "";
+                    sscanf(  $nv[1], "%d%s", $this->iframe_width, $unit );
+                    if( $unit != "px" ){
+                        // do not autoscale
+                        $this->iframe_width = 0;
+                    }
                 }
                 elseif( $nv[0] == 'height' ){
                     $res .= "min-height:" .$nv[1]. "; ";
+                    $unit = "";
+                    sscanf(  $nv[1], "%d%s", $this->iframe_height, $unit );
+                    if( $unit != "px" ){
+                        // do not autoscale
+                        $this->iframe_height = 0;
+                    }
                 }
                 elseif( $nv[0] == 'scale' ){
-                    $res .= "zoom:" .$nv[1]. "; ";
-                    $res .= "-moz-transform:scale(" .$nv[1]. "); ";
-                    $res .= "-moz-transform-origin: 0 0; ";
-                    $res .= "-o-transform:scale(" .$nv[1]. "); ";
-                    $res .= "-o-transform-origin: 0 0; ";
                     $res .= "-webkit-transform:scale(" .$nv[1]. "); ";
                     $res .= "-webkit-transform-origin: 0 0;";
                 }
@@ -129,7 +146,8 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
                     $this->iframe_href = $nv[1];
                 }
             }
-            $this->iframe_params = $res .' " ';
+            if( sizeof( $keywords )>2 )
+                $this->iframe_params = $res .' " ';
         }
         
         
@@ -139,11 +157,15 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
             $data["divid"] = "framelet".$this->iframe_counter;
             $data["iframe_params"] = base64_encode( $this->iframe_params );
             $data["iframe_href"] = $this->iframe_href;
+            $data["framewidth"] = $this->iframe_width;
+            $data["frameheight"] = $this->iframe_height;
         }
         
         if( $state == DOKU_LEXER_EXIT ){
-            $this->iframe_params_default;
-            $this->iframe_href_default;
+            $this->iframe_params = $this->iframe_params_default;
+            $this->iframe_href = $this->iframe_href_default;
+            $this->iframe_width = $this->iframe_width_default;
+            $this->iframe_height = $this->iframe_height_default;
         }
         
         $data += array(
@@ -184,7 +206,9 @@ class syntax_plugin_framelet extends DokuWiki_Syntax_Plugin
             'iframehref' => $data['iframe_href'],
             'bytepos_start' => $data['bytepos_start'],
             'bytepos_end' => $data['bytepos_end'],
-            'rev' => $INFO['lastmod']
+            'rev' => $INFO['lastmod'],
+            'framewidth' => $data['framewidth'],
+            'frameheight' => $data['frameheight']
         ];
         
         
