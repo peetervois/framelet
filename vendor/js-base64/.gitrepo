@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/dankogai/js-base64.git
 	branch = main
-	commit = deaecb270b0bf0874fac310f129aabc7b622b578
-	parent = c1f83aafbd254ea14ccf16c6f785b39db39d600f
+	commit = 3d5027674fd0678e7b342618594b29c90483ffa7
+	parent = 38e66a5085fb276cb5947fa8c3cf526a51c6883f
 	method = merge
-	cmdver = 0.4.0
+	cmdver = 0.4.3

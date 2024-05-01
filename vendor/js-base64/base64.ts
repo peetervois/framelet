@@ -9,19 +9,17 @@
  * 
  * @author Dan Kogai (https://github.com/dankogai)
  */
-const version = '3.5.2';
+const version = '3.7.7';
 /**
  * @deprecated use lowercase `version`.
  */
 const VERSION = version;
-const _hasatob = typeof atob === 'function';
-const _hasbtoa = typeof btoa === 'function';
 const _hasBuffer = typeof Buffer === 'function';
 const _TD = typeof TextDecoder === 'function' ? new TextDecoder() : undefined;
 const _TE = typeof TextEncoder === 'function' ? new TextEncoder() : undefined;
 const b64ch =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-const b64chs = [...b64ch];
+const b64chs = Array.prototype.slice.call(b64ch);
 const b64tab = ((a) => {
     let tab = {};
     a.forEach((c, i) => tab[c] = i);
@@ -32,11 +30,9 @@ const b64re =
 const _fromCC = String.fromCharCode.bind(String);
 const _U8Afrom = typeof Uint8Array.from === 'function'
     ? Uint8Array.from.bind(Uint8Array)
-    : (it, fn: (any) => number = (x) => x) =>
-        new Uint8Array(Array.prototype.slice.call(it, 0).map(fn));
+    : (it) => new Uint8Array(Array.prototype.slice.call(it, 0));
 const _mkUriSafe = (src: string) => src
-    .replace(/[+\/]/g, (m0) => m0 == '+' ? '-' : '_')
-    .replace(/=+$/m, '');
+    .replace(/=/g, '').replace(/[+\/]/g, (m0) => m0 == '+' ? '-' : '_');
 const _tidyB64 = (s: string) => s.replace(/[^A-Za-z0-9\+\/]/g, '');
 /**
  * polyfill version of `btoa`
@@ -63,7 +59,7 @@ const btoaPolyfill = (bin: string) => {
  * @param {String} bin binary string
  * @returns {string} Base64-encoded string
  */
-const _btoa = _hasbtoa ? (bin: string) => btoa(bin)
+const _btoa = typeof btoa === 'function' ? (bin: string) => btoa(bin)
     : _hasBuffer ? (bin: string) => Buffer.from(bin, 'binary').toString('base64')
         : btoaPolyfill;
 const _fromUint8Array = _hasBuffer
@@ -71,7 +67,7 @@ const _fromUint8Array = _hasBuffer
     : (u8a: Uint8Array) => {
         // cf. https://stackoverflow.com/questions/12710001/how-to-convert-uint8-array-to-base64-encoded-string/12713326#12713326
         const maxargs = 0x1000;
-        let strs = [];
+        let strs: string[] = [];
         for (let i = 0, l = u8a.length; i < l; i += maxargs) {
             strs.push(_fromCC.apply(null, u8a.subarray(i, i + maxargs)));
         }
@@ -190,13 +186,13 @@ const atobPolyfill = (asc: string) => {
  * @param {String} asc Base64-encoded string
  * @returns {string} binary string
  */
-const _atob = _hasatob ? (asc: string) => atob(_tidyB64(asc))
+const _atob = typeof atob === 'function' ? (asc: string) => atob(_tidyB64(asc))
     : _hasBuffer ? (asc: string) => Buffer.from(asc, 'base64').toString('binary')
         : atobPolyfill;
 //
 const _toUint8Array = _hasBuffer
     ? (a: string) => _U8Afrom(Buffer.from(a, 'base64'))
-    : (a: string) => _U8Afrom(_atob(a), c => c.charCodeAt(0));
+    : (a: string) => _U8Afrom(_atob(a).split('').map(c => c.charCodeAt(0)));
 /**
  * converts a Base64 string to a Uint8Array.
  */
@@ -215,6 +211,15 @@ const _unURI = (a: string) =>
  * @returns {string} UTF-8 string
  */
 const decode = (src: string) => _decode(_unURI(src));
+/**
+ * check if a value is a valid Base64 string
+ * @param {String} src a value to check
+  */
+const isValid = (src: any) => {
+    if (typeof src !== 'string') return false;
+    const s = src.replace(/\s+/g, '').replace(/={0,2}$/, '');
+    return !/[^\s0-9a-zA-Z\+/]/.test(s) || !/[^\s0-9a-zA-Z\-_]/.test(s);
+};
 //
 const _noEnum = (v) => {
     return {
@@ -267,11 +272,12 @@ const gBase64 = {
     utob: utob,
     btou: btou,
     decode: decode,
+    isValid: isValid,
     fromUint8Array: fromUint8Array,
     toUint8Array: toUint8Array,
     extendString: extendString,
     extendUint8Array: extendUint8Array,
-    extendBuiltins: extendBuiltins,
+    extendBuiltins: extendBuiltins
 }
 // makecjs:CUT //
 export { version };
@@ -288,6 +294,7 @@ export { encodeURI };
 export { encodeURI as encodeURL };
 export { btou };
 export { decode };
+export { isValid };
 export { fromUint8Array };
 export { toUint8Array };
 export { extendString };
