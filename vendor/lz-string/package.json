@@ -1,42 +1,99 @@
 {
-  "name": "lz-string",
-  "version": "1.4.4",
-  "license": "MIT",
-  "filename": "lz-string.js",
-  "description": "LZ-based compression algorithm",
-  "homepage": "http://pieroxy.net/blog/pages/lz-string/index.html",
-  "keywords": [
-    "lz",
-    "compression",
-    "string"
-  ],
-  "main": "libs/lz-string.js",
-  "typings": "typings/lz-string.d.ts",
-  "bin": {
-    "lz-string": "bin/bin.js"
-  },
-  "scripts": {},
-  "dependencies": {},
-  "devDependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pieroxy/lz-string.git"
-  },
-  "bugs": {
-    "url": "https://github.com/pieroxy/lz-string/issues"
-  },
-  "directories": {
-    "test": "tests"
-  },
-  "author": "pieroxy <pieroxy@pieroxy.net>",
-  "autoupdate": {
-     "source": "git",
-     "target": "git://github.com/pieroxy/lz-string.git",
-     "basePath": "libs/",
-     "files": [
-      "lz-string.js",
-      "lz-string.min.js",
-      "base64-string.js"
-     ]
-   }
+    "name": "lz-string",
+    "author": {
+        "name": "pieroxy",
+        "email": "pieroxy@pieroxy.net"
+    },
+    "contributors": [
+        {
+            "name": "Karnthis",
+            "email": "me@erinrivas.com"
+        },
+        {
+            "name": "Ryc O'Chet",
+            "email": "rycochet@rycochet.com"
+        }
+    ],
+    "version": "2.0.0-rc.3",
+    "license": "MIT",
+    "description": "LZ-based compression algorithm",
+    "homepage": "http://pieroxy.net/blog/pages/lz-string/index.html",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/pieroxy/lz-string.git"
+    },
+    "bugs": {
+        "url": "https://github.com/pieroxy/lz-string/issues"
+    },
+    "keywords": [
+        "lz",
+        "compression",
+        "string"
+    ],
+    "bin": {
+        "lz-string": "bin/cli.cjs"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        },
+        "./*": {
+            "types": "./dist/*.d.ts",
+            "import": "./dist/*.js",
+            "require": "./dist/*.cjs"
+        },
+        "./package.json": "./package.json"
+    },
+    "type": "module",
+    "main": "./dist/index.umd.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "bin",
+        "dist"
+    ],
+    "scripts": {
+        "build": "npm run build:lib && npm run build:cli",
+        "build:lib": "vite build",
+        "build:cli": "vite build -c vite.config.cli.mts",
+        "format": "npm run format:prettier && npm run format:eslint",
+        "format:prettier": "prettier --write .",
+        "format:eslint": "eslint --fix .",
+        "start": "vite build --watch",
+        "start:cli": "vite build -c vite.config.cli.mts --watch",
+        "test": "vitest",
+        "test:bench": "vitest bench",
+        "test:ui": "vitest --coverage --ui",
+        "test:coverage": "vitest run --coverage",
+        "lint": "npm run lint:prettier && npm run lint:eslint",
+        "lint:prettier": "prettier --check .",
+        "lint:eslint": "eslint ."
+    },
+    "devDependencies": {
+        "@btmills/prettier": "3.2.4",
+        "@ianvs/prettier-plugin-sort-imports": "4.1.1",
+        "@microsoft/eslint-formatter-sarif": "3.0.0",
+        "@types/node": "20.11.18",
+        "@typescript-eslint/eslint-plugin": "7.0.1",
+        "@typescript-eslint/parser": "7.0.1",
+        "@vitest/coverage-v8": "1.2.2",
+        "@vitest/ui": "1.2.2",
+        "commander": "12.0.0",
+        "eslint": "8.56.0",
+        "eslint-config-prettier": "9.1.0",
+        "tslib": "2.6.2",
+        "typescript": "5.3.3",
+        "vite": "5.1.2",
+        "vite-plugin-bin": "1.0.2",
+        "vite-plugin-dts": "3.7.2",
+        "vite-plugin-eslint": "1.8.1",
+        "vite-tsconfig-paths": "4.3.1",
+        "vitest": "1.2.2"
+    },
+    "override": {
+        "prettier": "npm:@btmills/prettier@3.1.0",
+        "rollup": "npm:@rollup/wasm-node"
+    }
 }
