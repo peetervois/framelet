@@ -5,8 +5,8 @@
 ;
 [subrepo]
 	remote = https://github.com/pieroxy/lz-string.git
-	branch = master
-	commit = 69fe5abf6900c2dc285e8d055c0bb12589418d14
-	parent = a00bc025e3f59155cfc0956c52c0a3a4d2868b33
+	branch = legacy
+	commit = 4a94308c1e684fb98866f7ba1288f3db6d9f8801
+	parent = c165fcb88bcb69f58764806faa8906f010de0375
 	method = merge
 	cmdver = 0.4.3
