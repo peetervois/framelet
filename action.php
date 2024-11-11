@@ -33,7 +33,7 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
     public function register(Doku_Event_Handler $controller)
     {
         $controller->register_hook('TPL_METAHEADER_OUTPUT', 'BEFORE', $this, 'handle_tpl_metaheader_output');
-        $controller->register_hook('HTML_EDIT_FORMSELECTION', 'BEFORE', $this, '_editform');
+        $controller->register_hook('EDIT_FORM_ADDTEXTAREA', 'BEFORE', $this, '_editform');
         $controller->register_hook('ACTION_ACT_PREPROCESS', 'BEFORE', $this, '_editpost');
     }
 
@@ -72,12 +72,9 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
      //       'src' => DOKU_BASE."lib/plugins/framelet/vendor/js-base64/base64.js");
     }
 
-    public function _editform(Doku_Event $event, $param) {
+    public function _editform(Doku_Event $event) {
         global $TEXT;
-        
-
-        
-        
+                
         if ($event->data['target'] !== 'plugin_framelet') {
             return;
         }
@@ -96,7 +93,8 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
         $form =& $event->data['form'];
         
         // Make fake edit form that can be driven from the framelet application
-        $form->addHidden( "do", "cancel");
+        $form->setHiddenField( "do", "cancel");
+
         // Prepare the data for framemaker
         $data = Array(
             'iframedivid' => $_POST['iframedivid'],
@@ -106,7 +104,7 @@ class action_plugin_framelet extends DokuWiki_Action_Plugin
             'framewidth' => $_POST['framewidth'],
             'frameheight' => $_POST['frameheight']
         );
-        $form->addElement( frameedit($data) );
+        $form->addHTML( frameedit($data) );
     }
     
     public function _editpost(Doku_Event $event) {
